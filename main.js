@@ -96,35 +96,46 @@ client.on('message', message => {
     } else
     if (command === 'talk') {
         message.channel.sendMessage(responses[Math.round(Math.random(0, 1)*10)]);
-    }
-    if (args.length > 0) {
-        if (command === 'add') {
+    } else
+    
+    if (command === 'add') {
+        if (args.length > 0) {
             let numArray = args.map(n=> +n);
             let total = numArray.reduce( (p, c) => +p + +c);
             message.channel.sendMessage(total);
-        } else
-        if (command === 'sub' || command === 'subtract') {
+        }
+    } else
+    if (command === 'sub' || command === 'subtract') {
+        if (args.length > 0) {
             let numArray = args.map(n=> +n);
             let total = numArray.reduce( (p, c) => +p - +c);
             message.channel.sendMessage(total);
-        } else
-        if (command === 'mult' || command === 'multiply') {
+        }
+    } else
+    if (command === 'mult' || command === 'multiply') {
+        if (args.length > 0) {
             let numArray = args.map(n=> +n);
             let total = numArray.reduce( (p, c) => +p * +c);
             message.channel.sendMessage(total);
-        } else
-        if (command === 'div' || command === 'divide') {
+        }
+    } else
+    if (command === 'div' || command === 'divide') {
+        if (args.length > 0) {
             let numArray = args.map(n=> +n);
             let total = numArray.reduce( (p, c) => +p / +c);
             message.channel.sendMessage(total);
-        } else 
-        if (command === 'pow' || command === 'power') {
+        }
+    } else 
+    if (command === 'pow' || command === 'power') {
+        if (args.length > 0) {
             message.channel.sendMessage(+Math.pow(args[0], args[1]));
-        } else
-        if (command === 'sqrt') {
+        }
+    } else
+    if (command === 'sqrt') {
+        if (args.length > 0) {
             message.channel.sendMessage(+Math.sqrt(args[0]));
         }
-    }
+    } else
 
     if (command === 'help') {
         if (args[0] === 'userInfo' || args[0] === 'userinfo') {

@@ -3,18 +3,20 @@
   
 **/
 
+"use strict";
+
 const Discord = require('discord.js');
-const config = require("./config.json");
+const config = require("./khanbot.json");
 const request = require('request');
 const client = new Discord.Client();
 
 const commands = [
-    // General
+    // Random
     [
-        "Help : Returns all commands.",
-        "Ping : Returns 'pong'.", 
+        "Help [command] : Returns all commands.",
         "Talk : Returns random phrases.",
         "Hello : Says hello back.",
+        "Ping : Returns 'pong'.", 
     ],
     // Math
     [
@@ -22,23 +24,17 @@ const commands = [
         "Sub/subtract <2+ values> : Multiples all given values.",
         "Mult/multiply <2+ values> : Multiplies all given values.",
         "Div/divide <2+ values> : Divides all given values.",
-        "Sq/square <1 value> : Squares a given value.",
-        "Sqrt <1 value> : Returns square root of value."
+        "Pow/power <base> <power> : Squares a given value.",
+        "Sqrt <1 value> : Returns square root of value.",
+
     ],
     // Khan Data
     [
-        // Main Commands
-        [
-            "UserInfo <username> : Returns your Khan Academy stats.",
-            "Hotlist <top> : Displays the top KA program on the hotlist.",
-            "ProgramData <program-id> : Returns a program\'s data.",
-
-        ],
-
-        // ProgramData specifc commands - c!program(D/d)ata <???>
-        [
-
-        ],
+        "UserInfo <username> : Returns a user's Khan Academy stats.",
+        "Discussion <username> : Returns a user's top discussion stats.",
+        "Badges <username> : Returns a user's badge counts.",
+        "Browse <page> : Displays the top KA program on the hotlist.",
+        "ProgramData <program-id> : Returns a program\'s data.",
     ],
 ];
 
@@ -55,11 +51,10 @@ var responses = [
     "Boi.",
 ];
 
-// Credit to WhatifyNW
 var getKAData = function(message, api, user, callback) {
     request(api + user, function(error, response, body) {
         if (!JSON.parse(body)) {
-            message.channel.sendMessage('That profile doesn\'t exist');
+            message.channel.sendMessage('Error with a **`getKAData`** request.');
             return;
         }
         callback(body);
@@ -67,6 +62,7 @@ var getKAData = function(message, api, user, callback) {
 };
 
 var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
+var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
 
 var status = [
     'online',
@@ -75,22 +71,22 @@ var status = [
 ];
 
 client.on('ready', () => {
-    console.log('I am ready!');
-    client.user.setGame('c!help');
-    client.user.setStatus(status[Math.round(Math.random()*2)]);
+    client.user.setGame('k.help');
+    client.user.setUsername('KhanBot');
+    console.log('I am ready Jett!');
+    //client.user.setStatus(status[Math.round(Math.random()*2)]);
 });
 
 client.on('message', message => {
 
-    if (!message.content.startsWith(config.prefix)) return
-    if (message.author.id === client.user.id) return
+    if (!message.content.startsWith(config.prefix)) return;
+    if (message.author.id === client.user.id) return;
     if (message.author.bot) return;
 
     var command = message.content.split(" ")[0];
     command = command.slice(config.prefix.length).toLowerCase();
 
     var args = message.content.split(" ").slice(1);
-
 
     if (command === 'ping') {
         message.channel.sendMessage("Pong!");
@@ -100,58 +96,79 @@ client.on('message', message => {
     } else
     if (command === 'talk') {
         message.channel.sendMessage(responses[Math.round(Math.random(0, 1)*10)]);
-    } else
-
-    if (command === 'add') {
-        let numArray = args.map(n=> parseInt(n));
-        let total = numArray.reduce( (p, c) => +p + +c);
-        message.channel.sendMessage(total);
-    } else
-    if (command === 'sub' || command === 'subtract') {
-        let numArray = args.map(n=> parseInt(n));
-        let total = numArray.reduce( (p, c) => +p - +c);
-        message.channel.sendMessage(total);
-    } else
-    if (command === 'mult' || command === 'multiply') {
-        let numArray = args.map(n=> parseInt(n));
-        let total = numArray.reduce( (p, c) => +p * +c);
-        message.channel.sendMessage(total);
-    } else
-    if (command === 'div' || command === 'divide') {
-        let numArray = args.map(n=> parseInt(n));
-        let total = numArray.reduce( (p, c) => +p / +c);
-        message.channel.sendMessage(total);
-    } else 
-    if (command === 'sq' || command === 'square') {
-        message.channel.sendMessage(parseInt(args[0] * args[0]));
-    } else
-    if (command === 'sqrt') {
-        message.channel.sendMessage(parseInt(Math.sqrt(args[0])));
-    } else
+    }
+    if (args.length > 0) {
+        if (command === 'add') {
+            let numArray = args.map(n=> +n);
+            let total = numArray.reduce( (p, c) => +p + +c);
+            message.channel.sendMessage(total);
+        } else
+        if (command === 'sub' || command === 'subtract') {
+            let numArray = args.map(n=> +n);
+            let total = numArray.reduce( (p, c) => +p - +c);
+            message.channel.sendMessage(total);
+        } else
+        if (command === 'mult' || command === 'multiply') {
+            let numArray = args.map(n=> +n);
+            let total = numArray.reduce( (p, c) => +p * +c);
+            message.channel.sendMessage(total);
+        } else
+        if (command === 'div' || command === 'divide') {
+            let numArray = args.map(n=> +n);
+            let total = numArray.reduce( (p, c) => +p / +c);
+            message.channel.sendMessage(total);
+        } else 
+        if (command === 'pow' || command === 'power') {
+            message.channel.sendMessage(+Math.pow(args[0], args[1]));
+        } else
+        if (command === 'sqrt') {
+            message.channel.sendMessage(+Math.sqrt(args[0]));
+        }
+    }
 
     if (command === 'help') {
-        if (args[0] === 'userInfo') {
+        if (args[0] === 'userInfo' || args[0] === 'userinfo') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("Userinfo", 'Use **`c!userInfo <@username>`** for user\'s statistics.');
+            embed.addField("Userinfo", 'Use **`k.userInfo <username>`** for user\'s statistics.');
             message.channel.sendEmbed(embed);
         } else
-        if (args[0] === 'hotlist') {
+        if (args[0] === 'browse') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("Hotlist", 'Use **`c!hotlist <top>`** for top program.');
+            embed.addField("Browse", 'Use **`k.browse hot`** for top hotlist program.\nUse **`k.browse recent`** for most recent program.\nUse **`k.browse votes`** for highest voted program.');
             message.channel.sendEmbed(embed);
-        } if (args[0] === 'programData') {
+        } else 
+        if (args[0] === 'programData' || args[0] === 'programdata') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("ProgramData", 'Use **`c!programData <program-id>`** for a program\'s data.');
+            embed.addField("ProgramData", 'Use **`k.programData <program-id>`** for a program\'s data.');
             message.channel.sendEmbed(embed);
-        } else {
+        } else
+        if (args[0] === 'discussion' || args[0] === 'Discussion') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("General Commands", commands[0]);
-            embed.addField("Math Operations", commands[1])
-            embed.addField("Khan Data", commands[2][0]);
+            embed.addField("Discussion", 'Use **`k.discussion <username>`** for a user\'s discussion.');
+            message.channel.sendEmbed(embed);
+        } else
+        if (args[0] === 'badges' || args[0] === 'Badges') {
+            let embed = new Discord.RichEmbed(); 
+            embed.setColor("#ffff00");
+            embed.addField("Badges", 'Use **`k.badges <username>`** for a user\'s badge counts.');
+            message.channel.sendEmbed(embed);
+        }
+        else if (args.length === 0) {
+            let embed = new Discord.RichEmbed(); 
+            embed.setColor("#ffff00");
+            embed.addField("Random Stuff", commands[0]);
+            embed.addField("Math Operations", commands[1]);
+            embed.addField("Khan Data", commands[2]);
+            message.channel.sendEmbed(embed);
+        }
+        else {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', 'That command is not defined for `help` to check. Use **`k.help`** to see commands.');
             message.channel.sendEmbed(embed);
         }
     } else
@@ -159,14 +176,19 @@ client.on('message', message => {
     if (command === 'userinfo') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
-                let points = JSON.parse(body).points;
-                let d = new Date(JSON.parse(body).dateJoined)
+                let data = JSON.parse(body);
+                let kaid = data.kaid;
+
+                if (data.dateJoined === null) {
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor('#ff0000');
+                    embed.addField('Error', 'That username does not exist, use **`k.help userinfo`** for more.');
+                    message.channel.sendEmbed(embed);
+                    return;
+                }
+
+                let d = new Date(data.dateJoined);
                 let date = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-                let kaid = JSON.parse(body).kaid;
-                let videos = JSON.parse(body).countVideosCompleted;
-                let name = JSON.parse(body).nickname;
-                let avatar = JSON.parse(body).avatarSrc;
-                let streak = JSON.parse(body).streakLastLength;
 
                 if (kaid.substring(0, 5) === 'kaid_') {
                     getKAData(message, 'http://www.khanacademy.org/api/internal/user/' + kaid + '/profile/widgets', '', function(widgets) {
@@ -182,94 +204,203 @@ client.on('message', message => {
                         }
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
-                        embed.setThumbnail(avatar);
-                        embed.addField(name, '@'+args[0]);
-                        embed.addField('Streak:', streak + ' days');
-                        embed.addField('Videos:', videos);
-                        embed.addField('Badges:', badges);
-                        embed.addField('Points:', points);
-                        embed.addField('Joined on:', date);
+                        // embed.setThumbnail(data.avatarSrc);
+                        embed.addField(data.nickname, '@'+args[0], true);
+                        embed.addField('Streak:', data.streakLastLength + ' days', true);
+                        embed.addField('Videos:', data.countVideosCompleted, true);
+                        embed.addField('Badges:', badges, true);
+                        embed.addField('Points:', data.points, true);
+                        embed.addField('Joined on:', date, true);
                         message.channel.sendEmbed(embed);
                     });
+                } else
+                if (kaid.substring(0, 5) !== 'kaid_') {
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor('#ff0000');
+                    embed.addField('Error', 'That username returned no KAID, use **`k.help userinfo`** for more.');
+                    message.channel.sendEmbed(embed);
                 }
             });
         } else if (args.length !== 1) {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
-            embed.addField('Error', 'The correct usage is **`c!userInfo <@username>**`.');
+            embed.addField('Error', 'The correct usage is **`k.userInfo <username>`**.');
             message.channel.sendEmbed(embed);
         } else {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
-            embed.addField('Error', 'That command is not defined for `userInfo`. Use **`c!help userInfo`** for more.');
+            embed.addField('Error', 'That command is not defined for `userInfo`. Use **`k.help userInfo`** for more.');
             message.channel.sendEmbed(embed);
         }
 
     } else
     if (command === 'programdata') {
-        if (args.length === 1 && args[0].length > 15) {
-            getKAData(message, 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=' + args[0], '', function(body) {
-                let t = JSON.parse(body).scratchpad.title;
-                let thumb = JSON.parse(body).imagePath;
-                let l = JSON.parse(body).url;
-                let a = JSON.parse(body).creatorProfile.username;
-                let nick = JSON.parse(body).creatorProfile.nickname;
-                let v = JSON.parse(body).scratchpad.sumVotesIncremented;
-                let s = JSON.parse(body).scratchpad.spinoffCount;
-                let d = new Date(JSON.parse(body).scratchpad.created);
+        if (args.length === 1) {
+            getKAData(message, programApi, args[0], function(body) {
+                let sdata = JSON.parse(body).scratchpad;
+                let data = JSON.parse(body);
+                
+                let d = new Date(sdata.created);
                 let c = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-                let f = JSON.parse(body).scratchpad.flags.length || 0;
-                let hidden = JSON.parse(body).scratchpad.hideFromHotlist || false;
-
+                
                 let embed = new Discord.RichEmbed();
                 embed.setColor("#1b964a");
-                embed.setImage('https://www.khanacademy.org' + thumb);
-                embed.setURL(l);
-                embed.addField(t, '**Author:** ' + nick + '\n**Votes:** ' + v + '\n**Spinoffs:** ' + s + '\n**Created:** ' + c + '\n**Flags:** ' + f + '\n**Hidden:** ' + hidden);
+                embed.setImage(sdata.imageUrl);
+                embed.setURL(sdata.url);
+                embed.setTitle(sdata.title);
+                embed.addField('Author', data.creatorProfile.nickname, true);
+                embed.addField('Votes', sdata.sumVotesIncremented, true);
+                embed.addField('Spinoffs', sdata.spinoffCount, true);
+                embed.addField('Created', c, true);
+                embed.addField('Flags', sdata.flags.length, true);
+                embed.addField('Hidden', sdata.hideFromHotlist, true);
                 message.channel.sendEmbed(embed);
             });
-        } else if (args.length !== 1) {
+        } else 
+        if (args.length !== 1) {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
-            embed.addField('Error', 'The correct usage is **`c!programData <program-id>**`.');
+            embed.addField('Error', 'The correct usage is **`k.programData <program-id>`**.');
             message.channel.sendEmbed(embed);
         } else {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
-            embed.addField('Error', 'That program ID does not exist. Use **`c!help programData`** for more.');
+            embed.addField('Error', 'That program ID does not exist. Use **`k.help programData`** for more.');
             message.channel.sendEmbed(embed);
         }
-        
     } else 
-    if (command === 'hotlist' && args.length === 1) {
-        if (args[0] === 'top') {
-            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort=3&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
-                
-                let thumb = JSON.parse(body).scratchpads[0].thumb;
-                let t = JSON.parse(body).scratchpads[0].title;
-                let a = JSON.parse(body).scratchpads[0].authorNickname;
-                let v = JSON.parse(body).scratchpads[0].sumVotesIncremented;
-                let s = JSON.parse(body).scratchpads[0].spinoffCount;
-                let l = JSON.parse(body).scratchpads[0].url;
+    if (command === 'browse') {
+        var page = null;
+        if (args[0] === 'hot') {
+            page = 3;
+        } else
+        if (args[0] === 'recent') {
+            page = 2;
+        } else
+        if (args[0] === 'votes') {
+            page = 5;
+        }
+        if (page !== null) {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort='+page+'&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
+                let data = JSON.parse(body).scratchpads[0];
 
                 let embed = new Discord.RichEmbed();
                 embed.setColor("#1b964a");
-                embed.setImage('https://www.khanacademy.org' + thumb);
-                embed.setURL(l);
-                embed.addField(t, '**Author:** ' + a + '\n**Votes:** ' + v + '\n**Spinoffs:** ' + s);
+                embed.setImage('https://www.khanacademy.org' + data.thumb);
+                embed.setURL(data.url);
+                embed.setTitle(data.title);
+                embed.addField('Author', data.authorNickname, true);
+                embed.addField('Votes', data.sumVotesIncremented, true);
+                embed.addField('Spinoffs', data.spinoffCount, true);
                 message.channel.sendEmbed(embed);
+            });
+        } else
+        if (page === null) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', 'Incorrect usage, use **`k.help browse`** for more.');
+            message.channel.sendEmbed(embed);
+        } else
+        if (args.length !== 1) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', 'Incorrect usage, use **`k.help browse`** for more.');
+            message.channel.sendEmbed(embed);
+        }
+    } else
+    if (command === 'discussion') {
+        if (args.length === 1) {
+            getKAData(message, userApi, args[0], function(body) {
+                let kaid = JSON.parse(body).kaid;
+                let nick = JSON.parse(body).nickname;
+
+                // Add error like the userinfo error, if not public
+
+                getKAData(message, 'https://www.khanacademy.org/api/internal/user/'+kaid+'/profile/widgets', '', function(widgets) {
+                    try {
+                        let discussWidget = JSON.parse(widgets).filter(function(widget){return widget.widgetId === "DiscussionWidget"})[0].renderData.discussionData;
+                        var stats = discussWidget.statistics;
+
+                        let embed = new Discord.RichEmbed();
+                        embed.setColor("#1b964a");
+                        //embed.setImage('https://www.khanacademy.org' + data.imagePath);
+                        //embed.setURL(data.url);
+                        embed.addField(nick, '@'+args[0], true);
+                        embed.addField('Questions', stats.questions , true);
+                        embed.addField('Answers', stats.answers, true);
+                        embed.addField('Evaluations', stats.projectanswers , true);
+                        embed.addField('Tips&Thx', stats.comments , true);
+                        embed.addField('Comments', stats.replies , true);
+                        embed.addField('Votes', stats.votes , true);
+                        embed.addField('Flags', stats.flags , true);
+                        message.channel.sendEmbed(embed);
+                    }
+                    catch(discussWidget) {
+                        stats = null;
+                    }
+                });
+            });
+        } else 
+        if (args.length !== 1) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', 'The correct usage is **`k.discussion <username>`**.');
+            message.channel.sendEmbed(embed);
+        }
+    } else
+    if (command === 'badges') {
+        if (args.length === 1) {
+            getKAData(message, userApi, args[0], function(body) {
+                let kaid = JSON.parse(body).kaid;
+
+                if (kaid.substring(0, 5) === 'kaid_') {
+                    var badges = [];
+                    var types = [];
+
+                    getKAData(message, 'http://www.khanacademy.org/api/internal/user/' + kaid + '/profile/widgets', '', function(widgets) {
+                        try {
+                            let badgeWidget = JSON.parse(widgets).filter(function(widget){return widget.widgetId === "BadgeCountWidget"})[0].renderData.badgeCountData.counts;
+                            badgeWidget.forEach(function(counts) {
+                                badges.push(counts.count);
+                                types.push(counts.typeLabel);
+                            });
+                            let embed = new Discord.RichEmbed();
+                            embed.setColor('#0DB221');
+                            //embed.setThumbnail(data.avatarSrc);
+                            for (var i = 0; i < badges.length; i++) {
+                                embed.addField(types[i], badges[i], true);
+                            }
+                            message.channel.sendEmbed(embed);
+                        }
+                        catch(badgeWidget) {
+                            let embed = new Discord.RichEmbed();
+                            embed.setColor('#ff0000');
+                            embed.addField('Error', 'That user has no public badges.');
+                            message.channel.sendEmbed(embed);
+                        }
+
+                    });
+                } else
+                if (kaid.substring(0, 5) !== 'kaid_') {
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor('#ff0000');
+                    embed.addField('Error', 'That username returned no KAID, use **`k.help badges`** for more.');
+                    message.channel.sendEmbed(embed);
+                }
             });
         } else
         if (args.length !== 1) {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
-            embed.addField('Error', 'The correct usage is **`c!hotlist <top>**`.');
+            embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
-    } else {
+    }
+
+    else {
         let embed = new Discord.RichEmbed();
         embed.setColor('#ff0000');
-        embed.addField('Error', 'That command is not defined. Use **`c!help`** for more.');
+        embed.addField('Error', 'That command is not defined. Use **`k.help`** for more.');
         message.channel.sendEmbed(embed);
     }
 });

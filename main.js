@@ -6,9 +6,10 @@
 "use strict";
 
 const Discord = require('discord.js');
-const config = require("./khanbot.json");
+//const = require("./khanbot.json");
 const request = require('request');
 const client = new Discord.Client();
+const prefix = 'k.';
 
 const commands = [
     // Random
@@ -71,7 +72,7 @@ var status = [
 ];
 
 client.on('ready', () => {
-    client.user.setGame('k.help');
+    client.user.setGame(prefix + 'help');
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
     //client.user.setStatus(status[Math.round(Math.random()*2)]);
@@ -79,12 +80,12 @@ client.on('ready', () => {
 
 client.on('message', message => {
 
-    if (!message.content.startsWith(config.prefix)) return;
+    if (!message.content.startsWith(prefix)) return;
     if (message.author.id === client.user.id) return;
     if (message.author.bot) return;
 
     var command = message.content.split(" ")[0];
-    command = command.slice(config.prefix.length).toLowerCase();
+    command = command.slice(prefix.length).toLowerCase();
 
     var args = message.content.split(" ").slice(1);
 
@@ -416,4 +417,4 @@ client.on('message', message => {
     }
 });
 
-client.login(config.token);
+client.login(process.env.BOT_TOKEN);

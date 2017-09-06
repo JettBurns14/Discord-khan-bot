@@ -62,6 +62,22 @@ var getKAData = function(message, api, user, callback) {
     });
 };
 
+var millisToTime = function(milliseconds) {
+    let x = milliseconds / 1000;
+    let s = Math.floor(x % 60);
+    x /= 60;
+    let m = Math.floor(x % 60);
+    x /= 60;
+    let h = Math.floor(x % 24);
+    //x /= 24;
+    //let d = Math.floor(x);
+    
+    return h + ' Hours, ' + m + ' Minutes, ' + s + " Seconds";
+};
+
+var totalTime = 0;
+var statusNum = 0;
+
 var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
 var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
 
@@ -75,6 +91,10 @@ client.on('ready', () => {
     client.user.setGame(prefix + 'help');
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
+  
+    setInterval(function() {
+        totalTime++;
+    }, 1);
     //client.user.setStatus(status[Math.round(Math.random()*2)]);
 });
 
@@ -97,6 +117,9 @@ client.on('message', message => {
     } else
     if (command === 'talk') {
         message.channel.sendMessage(responses[Math.round(Math.random(0, 1)*10)]);
+    } else
+    if (command === 'uptime') {
+        message.channel.sendMessage(':clock2: **KhanBot** has been online for ' + millisToTime(totalTime) + '.');
     } else
     
     if (command === 'add') {

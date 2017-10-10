@@ -89,8 +89,9 @@ var status = [
 ];
 
 client.on('ready', () => {
-    client.user.setGame(prefix + 'help');
-    client.user.setUsername('KhanBot');
+    //client.user.setGame(prefix + 'help');
+    client.user.setGame('k.help');
+    //client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
   
     setInterval(function() {
@@ -438,13 +439,13 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     }
-
+    /*
     else {
         let embed = new Discord.RichEmbed();
         embed.setColor('#ff0000');
         embed.addField('Error', 'That command is not defined. Use **`k.help`** for more.');
         message.channel.sendEmbed(embed);
-    }
+    }*/
 });
 
 client.login(process.env.BOT_TOKEN);

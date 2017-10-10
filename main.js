@@ -89,9 +89,9 @@ var status = [
 ];
 
 client.on('ready', () => {
-    client.user.setGame(prefix + 'help');
+    client.user.setGame({name: prefix + 'help'});
     //client.user.setGame({type: 1, name: prefix + "help", url: ""});
-    client.user.setUsername('testing testing 1 2 3');
+    //client.user.setUsername('testing testing 1 2 3');
     console.log('I am ready Jett!');
   
     setInterval(function() {

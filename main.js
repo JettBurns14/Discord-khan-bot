@@ -89,8 +89,8 @@ var status = [
 ];
 
 client.on('ready', () => {
-    //client.user.setGame(prefix + 'help');
-    client.User.setGame({type: 1, name: prefix + "help", url: ""});
+    client.user.setGame(prefix + 'help');
+    //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     //client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
   

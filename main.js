@@ -49,8 +49,7 @@ var responses = [
     "Agreed.",
     "Bye.",
     "Boi.",
-    ":thonk:",
-    
+    "<:Thonk:358268256110510091>",
 ];
 
 var getKAData = function(message, api, user, callback) {
@@ -111,9 +110,10 @@ client.on('message', message => {
     command = command.slice(prefix.length).toLowerCase();
 
     var args = message.content.split(" ").slice(1);
+    args = args.toLowerCase();
 
     if (command === 'ping') {
-        message.channel.sendMessage("Pong!");
+        message.channel.sendMessage("Pong!" + args[0]);
     } else
     if (command === "hello") {
         message.channel.sendMessage(`Hello ${message.author.username}!`);
@@ -439,9 +439,6 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
-    } else
-    if (command === 'test') {
-        message.channel.sendMessage('<:Thonk:358268256110510091>');
     }
     /*
     else {

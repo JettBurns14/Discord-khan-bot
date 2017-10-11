@@ -114,7 +114,7 @@ client.on('message', message => {
     //args = args.toLowerCase();
 
     if (command === 'ping') {
-        message.channel.sendMessage("Pong!" + args[0]);
+        message.channel.sendMessage("Pong!");
     } else
     if (command === "hello") {
         message.channel.sendMessage(`Hello ${message.author.username}!`);

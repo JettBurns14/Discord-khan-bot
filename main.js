@@ -1,12 +1,10 @@
 /**
-  I know, the code is sloppy, but that's not priority. :P
-  
+    Finally cleaning up this code.
 **/
 
 "use strict";
 
 const Discord = require('discord.js');
-//const = require("./khanbot.json");
 const request = require('request');
 const client = new Discord.Client();
 const prefix = 'k.';
@@ -51,6 +49,8 @@ var responses = [
     "Agreed.",
     "Bye.",
     "Boi.",
+    ":thonk:",
+    
 ];
 
 var getKAData = function(message, api, user, callback) {
@@ -439,6 +439,9 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
+    } else
+    if (command === 'test') {
+        message.channel.sendMessage('<:Thonk:358268256110510091>');
     }
     /*
     else {

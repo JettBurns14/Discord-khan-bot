@@ -109,7 +109,7 @@ client.on('message', message => {
     var command = message.content.split(" ")[0];
     command = command.slice(prefix.length).toLowerCase();
 
-    var args = message.content.split(" ").slice(1).toString().toLowerCase();
+    var args = message.content.split(" ").slice(1);//.toString().toLowerCase();
     //var args = argsU.toLowerCase();
     //args = args.toLowerCase();
 

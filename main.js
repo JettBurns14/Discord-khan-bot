@@ -111,6 +111,7 @@ client.on('message', message => {
     command = command.slice(prefix.length).toLowerCase();
 
     var args = message.content.split(" ").slice(1);
+    args[0] = args[0].toLowerCase();
 
     if (command === 'ping') {
         message.channel.sendMessage("Pong!");
@@ -171,7 +172,7 @@ client.on('message', message => {
     } else
 
     if (command === 'help') {
-        if (args[0] === 'userInfo' || args[0] === 'userinfo') {
+        if (args[0] === 'userinfo') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
             embed.addField("Userinfo", 'Use **`k.userInfo <username>`** for user\'s statistics.');
@@ -183,19 +184,19 @@ client.on('message', message => {
             embed.addField("Browse", 'Use **`k.browse hot`** for top hotlist program.\nUse **`k.browse recent`** for most recent program.\nUse **`k.browse votes`** for highest voted program.');
             message.channel.sendEmbed(embed);
         } else 
-        if (args[0] === 'programData' || args[0] === 'programdata') {
+        if (args[0] === 'programdata') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
             embed.addField("ProgramData", 'Use **`k.programData <program-id>`** for a program\'s data.');
             message.channel.sendEmbed(embed);
         } else
-        if (args[0] === 'discussion' || args[0] === 'Discussion') {
+        if (args[0] === 'discussion') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
             embed.addField("Discussion", 'Use **`k.discussion <username>`** for a user\'s discussion.');
             message.channel.sendEmbed(embed);
         } else
-        if (args[0] === 'badges' || args[0] === 'Badges') {
+        if (args[0] === 'badges') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
             embed.addField("Badges", 'Use **`k.badges <username>`** for a user\'s badge counts.');

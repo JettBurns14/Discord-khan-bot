@@ -80,6 +80,7 @@ var statusNum = 0;
 
 var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
 var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
+var labsApi = 'https://www.khanacademy.org/api/labs/scratchpads/';
 
 var status = [
     'online',
@@ -326,6 +327,7 @@ client.on('message', message => {
             page = 5;
         }
         if (page !== null) {
+            /*
             getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort='+page+'&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
                 let data = JSON.parse(body).scratchpads[0];
 
@@ -338,6 +340,25 @@ client.on('message', message => {
                 embed.addField('Votes', data.sumVotesIncremented, true);
                 embed.addField('Spinoffs', data.spinoffCount, true);
                 message.channel.sendEmbed(embed);
+            });*/
+            // Load the top program of any of the pages.
+            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort='+page+'&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
+                let data = JSON.parse(body).scratchpads[0];
+                let embed = new Discord.RichEmbed();
+
+                getKAData(message, labsApi, data.url.split('/')[5], function(body2) {
+                    embed.setColor("#1b964a");
+                    embed.setImage('https://www.khanacademy.org' + data.thumb);
+                    embed.setURL(data.url);
+                    embed.setTitle(data.title);
+                    embed.addField('Author', data.authorNickname, true);
+                    embed.addField('Votes', data.sumVotesIncremented, true);
+                    embed.addField('Spinoffs', data.spinoffCount, true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length, true);
+                    message.channel.sendEmbed(embed);
+                });
+
+                //embed.addField('Flags', data.flags.length, true);
             });
         } else
         if (page === null) {

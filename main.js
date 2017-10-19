@@ -478,7 +478,7 @@ client.on('message', message => {
         var run = setInterval(function() { testFunction() }, 1000);
         if (args[0] === 'stop') {
             clearInterval(run);
-        }*/
+        }
         console.log('test command fired');
         var run = setInterval(function() { testFunction() }, 1000);
 
@@ -495,7 +495,7 @@ client.on('message', message => {
             console.log('Attempted to stop test command');
         } else {
             testFunction();
-        }
+        }*/
     }
     /*
     else {

@@ -87,19 +87,14 @@ var status = [
     'idle',
     'dnd'
 ];
-/*var games = [
-    `${prefix}help`,
-    `${client.guilds.size} Guilds`,
-    `${client.users.size} Users`,
-    `${client.channels.size} Channels`
-];*/
-var games = [
-    prefix + 'help',
-    client.guilds.size + ' Guilds',
-    client.users.size + ' Users'
-];
 
 client.on('ready', () => {
+    var games = [
+        `${prefix}help`,
+        `${client.guilds.size} Guilds`,
+        `${client.users.size} Users`,
+        `${client.channels.size} Channels`
+    ];
     //client.user.setGame({name: prefix + 'help'});
     //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     client.user.setPresence({ game: { name: games[Math.round(Math.random()*games.length)], type: 0 } });

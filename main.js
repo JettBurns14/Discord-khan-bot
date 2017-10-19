@@ -479,17 +479,21 @@ client.on('message', message => {
         if (args[0] === 'stop') {
             clearInterval(run);
         }*/
+        
+        var run = setInterval(function() { testFunction() }, 1000);
 
         function testFunction() {
             message.channel.send('testing');
         }
-        var run;
-        if (!args[0]) {
-            run = setInterval(function() { testFunction() }, 1000);
-        }
-        if (args[0] === 'stop') {
+        function stopFunction() {
             clearInterval(run);
         }
+        
+        if (args[0] === 'stop') {
+            stopFunction();
+        } //else {
+            //testFunction();
+        //}
     }
     /*
     else {

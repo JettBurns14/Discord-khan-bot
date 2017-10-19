@@ -493,9 +493,9 @@ client.on('message', message => {
         if (args[0] === 'stop') {
             stopFunction();
             console.log('Attempted to stop test command');
-        } //else {
-            //testFunction();
-        //}
+        } else {
+            testFunction();
+        }
     }
     /*
     else {

@@ -461,6 +461,9 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
+    } else
+    if (command === 'test') {
+        message.channel.sendMessage(client.guilds + ', ' + client.users);
     }
     /*
     else {

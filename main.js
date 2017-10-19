@@ -99,6 +99,7 @@ client.on('ready', () => {
     //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     client.user.setPresence({ game: { name: games[Math.round(Math.random()*games.length)], type: 0 } });
     client.user.setUsername('KhanBot');
+    console.log(games[2]);
     console.log('I am ready Jett!');
   
     setInterval(function() {

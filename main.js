@@ -485,7 +485,8 @@ client.on('message', message => {
         }
         if (!args[0]) {
             var run = setInterval(function() { testFunction() }, 1000);
-        } else if (args[0] === 'stop') {
+        }
+        if (args[0] === 'stop') {
             clearInterval(run);
         }
     }

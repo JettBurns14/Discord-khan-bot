@@ -463,7 +463,7 @@ client.on('message', message => {
         }
     } else
     if (command === 'test') {
-        message.channel.sendMessage(client.guilds + ', ' + client.users);
+        message.channel.sendMessage(client.guilds.size + ' guilds\n' + client.users.size + ' users\n' + client.channels.size + ' channels');
     }
     /*
     else {

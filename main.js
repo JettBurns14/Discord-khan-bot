@@ -471,11 +471,21 @@ client.on('message', message => {
         }
     } else
     if (command === 'test') {
+        /*
         function testFunction() {
             message.channel.sendMessage('testing');
         }
         var run = setInterval(function() { testFunction() }, 1000);
         if (args[0] === 'stop') {
+            clearInterval(run);
+        }*/
+
+        function testFunction() {
+            message.channel.send('testing');
+        }
+        if (!args[0]) {
+            var run = setInterval(function() { testFunction() }, 1000);
+        } else if (args[0] === 'stop') {
             clearInterval(run);
         }
     }

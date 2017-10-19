@@ -469,9 +469,15 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
-    } /*else
+    } else
     if (command === 'test') {
-        
+        function testFunction() {
+            message.channel.sendMessage('testing');
+        }
+        var run = setInterval(testFunction(), 1000);
+        if (args[0] === 'stop') {
+            clearInterval(run);
+        }
     }
     /*
     else {

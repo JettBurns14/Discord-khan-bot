@@ -474,7 +474,7 @@ client.on('message', message => {
         function testFunction() {
             message.channel.sendMessage('testing');
         }
-        var run = setInterval(testFunction(), 1000);
+        var run = setInterval(function() { testFunction() }, 1000);
         if (args[0] === 'stop') {
             clearInterval(run);
         }

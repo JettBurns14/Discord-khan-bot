@@ -87,11 +87,16 @@ var status = [
     'idle',
     'dnd'
 ];
-var games = [
+/*var games = [
     `${prefix}help`,
     `${client.guilds.size} Guilds`,
     `${client.users.size} Users`,
     `${client.channels.size} Channels`
+];*/
+var games = [
+    prefix + 'help',
+    client.guilds.size + ' Guilds',
+    client.users.size + ' Users'
 ];
 
 client.on('ready', () => {

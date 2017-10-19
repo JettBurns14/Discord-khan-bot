@@ -91,7 +91,7 @@ var games = [
     `${prefix}help`,
     `${client.guilds.size} Guilds`,
     `${client.users.size} Users`,
-    `${client.channels.size} Channels`,
+    `${client.channels.size} Channels`
 ];
 
 client.on('ready', () => {
@@ -468,8 +468,8 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
-    } else
-    /*if (command === 'test') {
+    } /*else
+    if (command === 'test') {
         
     }
     /*

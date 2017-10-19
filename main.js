@@ -87,17 +87,24 @@ var status = [
     'idle',
     'dnd'
 ];
+var games = [
+    `${prefix}help`,
+    `${client.guilds.size} Guilds`,
+    `${client.users.size} Users`,
+    `${client.channels.size} Channels`,
+];
 
 client.on('ready', () => {
     //client.user.setGame({name: prefix + 'help'});
     //client.user.setGame({type: 1, name: prefix + "help", url: ""});
-    client.user.setPresence({ game: { name: `${prefix}help`, type: 0 } });
+    client.user.setPresence({ game: { name: games[Math.round(Math.random()*games.length)], type: 0 } });
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
   
     setInterval(function() {
         totalTime++;
     }, 1);
+    
     //client.user.setStatus(status[Math.round(Math.random()*2)]);
 });
 
@@ -462,8 +469,8 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
-    if (command === 'test') {
-        message.channel.sendMessage(client.guilds.size + ' guilds\n' + client.users.size + ' users\n' + client.channels.size + ' channels');
+    /*if (command === 'test') {
+        
     }
     /*
     else {

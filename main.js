@@ -49,7 +49,33 @@ var responses = [
     "Agreed.",
     "Bye.",
     "Boi.",
+    "Nah.",
+    "Wut.",
+    "Wat.",
+    "Impossible! :O",
+    "No way!",
+    "Of course!",
+    "Why you asking me?",
+    "Don't ask me!",
+    "I had nothing to do with it!",
+    "Leave me alone. :P",
     "<:Thonk:358268256110510091>",
+];
+
+var greetings = [
+    "Hai",
+    "Hi",
+    "Sup",
+    "Hello",
+    "Yo, wus up",
+    "Greetings",
+    "Hola",
+    "Good day",
+    "Howdy",
+    "Hey",
+    "Hiya",
+    "Hi there",
+    
 ];
 
 var getKAData = function(message, api, user, callback) {
@@ -77,6 +103,7 @@ var millisToTime = function(milliseconds) {
 
 var totalTime = 0;
 var statusNum = 0;
+var mode;
 
 var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
 var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
@@ -95,8 +122,6 @@ client.on('ready', () => {
         `${client.users.size} Users`,
         `${client.channels.size} Channels`
     ];
-    //client.user.setGame({name: prefix + 'help'});
-    //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     client.user.setPresence({ game: { name: games[Math.round(Math.random()*games.length)], type: 0 } });
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
@@ -106,6 +131,8 @@ client.on('ready', () => {
         totalTime++;
     }, 1);
     
+    //client.user.setGame({name: prefix + 'help'});
+    //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     //client.user.setStatus(status[Math.round(Math.random()*2)]);
 });
 
@@ -125,8 +152,8 @@ client.on('message', message => {
     if (command === 'ping') {
         message.channel.sendMessage("Pong!");
     } else
-    if (command === "hello") {
-        message.channel.sendMessage(`Hello ${message.author.username}!`);
+    if (command === 'hello' || command === 'hi') {
+        message.channel.sendMessage(`${greetings[Math.floor(Math.random()*(greetings.length))]} ${message.author.username}!`);
     } else
     if (command === 'talk') {
         message.channel.sendMessage(responses[Math.round(Math.random(0, 1)*10)]);
@@ -210,6 +237,12 @@ client.on('message', message => {
             embed.setColor("#ffff00");
             embed.addField("Badges", 'Use **`k.badges <username>`** for a user\'s badge counts.');
             message.channel.sendEmbed(embed);
+        } else
+        if (args[0] === 'userprograms' || args[0] === 'userPrograms') {
+            let embed = new Discord.RichEmbed(); 
+            embed.setColor("#ffff00");
+            embed.addField("Badges", 'Use **`userPrograms <username>`** to get all a user\'s program stats.');
+            message.channel.sendEmbed(embed);
         }
         else if (args.length === 0) {
             let embed = new Discord.RichEmbed(); 
@@ -288,6 +321,7 @@ client.on('message', message => {
         }
 
     } else
+        
     if (command === 'programdata') {
         if (args.length === 1) {
             getKAData(message, programApi, args[0], function(body) {
@@ -323,6 +357,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else 
+        
     if (command === 'browse') {
         var page = null;
         if (args[0] === 'hot') {
@@ -382,6 +417,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
+        
     if (command === 'discussion') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
@@ -422,6 +458,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
+        
     if (command === 'badges') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
@@ -470,32 +507,92 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
-    if (command === 'test') {
-        /*
-        function testFunction() {
-            message.channel.sendMessage('testing');
-        }
-        var run = setInterval(function() { testFunction() }, 1000);
-        if (args[0] === 'stop') {
-            clearInterval(run);
-        }
-        console.log('test command fired');
-        var run = setInterval(function() { testFunction() }, 1000);
-
-        function testFunction() {
-            message.channel.send('testing');
-            console.log('testing');
-        }
-        function stopFunction() {
-            clearInterval(run);
-        }
         
-        if (args[0] === 'stop') {
-            stopFunction();
-            console.log('Attempted to stop test command');
-        } else {
-            testFunction();
-        }*/
+    if (command === 'userprograms') {
+        if (args.length === 1) {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/user/scratchpads?username=' + args[0] + '&limit=1000', '', function(body) {
+                let numPrograms = JSON.parse(body).scratchpads.length;
+                if (numPrograms > 0) {
+                    let numVotes = 0;
+                    let numSpinoffs = 0; 
+                    
+                    for (var i = 0; i < numPrograms; ++i) {
+                        var scratchpad = JSON.parse(body).scratchpads[i];
+                        numVotes += scratchpad.sumVotesIncremented;
+                        numSpinoffs += scratchpad.spinoffCount;
+                    }
+                    let nick = JSON.parse(body).scratchpads[0].authorNickname;
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor("#1b964a");
+                    //embed.setImage('https://www.khanacademy.org' + data.imagePath);
+                    //embed.setURL(data.url);
+                    embed.addField(nick, '@'+args[0], true);
+                    embed.addField('Programs:', numPrograms , true);
+                    embed.addField('Total Votes:', numVotes , true);
+                    embed.addField('Total Spinoffs:', numSpinoffs , true);
+                    embed.addField('Average Votes Received:', Math.round((numVotes / numPrograms) * 100) / 100);
+                    embed.addField('Average Spin-offs Received:', Math.round((numSpinoffs / numPrograms) * 100) / 100);
+                    // Average votes received = Math.round((numVotes / numPrograms) * 100) / 100
+                    // Average spinoffs received = Math.round((numSpinoffs / numPrograms) * 100) / 100          
+                    message.channel.sendEmbed(embed);
+                } else {
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor('#ff0000');
+                    embed.addField('Error', ':x: That user has no programs, use **`k.help userPrograms`** for more.');
+                    message.channel.sendEmbed(embed);
+                }
+            });
+        } else
+        if (args.length !== 1) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', ':x: The correct usage is **`k.userPrograms <username>`**.');
+            message.channel.sendEmbed(embed);
+        }
+    } else
+    if (command === 'test') {
+        if (args.length === 1) {
+            if (args[0] === 'stop') {
+                mode = 'stop';
+            } else 
+            if (args[0] === 'start') {
+                mode = 'test';
+            }
+
+            if (mode === 'test') {
+                message.channel.send(`Mode is: ${mode}`);
+            }
+            if (mode === 'stop') {
+                message.channel.send(`Mode is ${mode}`);
+            }
+            /*
+            function testFunction() {
+                message.channel.sendMessage('testing');
+            }
+            var run = setInterval(function() { testFunction() }, 1000);
+            if (args[0] === 'stop') {
+                clearInterval(run);
+            }
+            console.log('test command fired');
+
+            var run = setInterval(function() { testFunction() }, 2000);
+
+            function testFunction() {
+                message.channel.send('testing');
+                //console.log('testing');
+            }
+            function stopFunction() {
+                clearInterval(run);
+            }
+
+            if (args[0] === 'stop') {
+                stopFunction();
+                console.log('Attempted to stop test command');
+            } else {
+                testFunction();
+            }
+            */
+        }
     }
     /*
     else {

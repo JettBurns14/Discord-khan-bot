@@ -559,18 +559,13 @@ client.on('message', message => {
             if (args[0] === 'start') {
                 mode = 'test';
             }
-            let run;
-            
-            if (mode === 'test') {
-                run = setInterval(function() {
-                    message.channel.send(`Mode is: ${mode}`);
-                }, 2000);
-            } else
-            if (mode === 'stop') {
-                clearInterval(run);
-                run = null;
+            let run = setInterval(function() {
                 message.channel.send(`Mode is: ${mode}`);
-            }
+
+                if (mode === 'stop') {
+                    clearInterval(run);
+                }
+            }, 2000);
             /*
             function testFunction() {
                 message.channel.sendMessage('testing');

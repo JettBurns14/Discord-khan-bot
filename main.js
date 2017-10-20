@@ -556,47 +556,48 @@ client.on('message', message => {
         }
     } else
     if (command === 'test') {
-        if (args.length === 1) {
-            if (args[0] === 'stop') {
-                mode = 'stop';
-            } else 
-            if (args[0] === 'start') {
-                mode = 'test';
-            }
-            let run = setInterval(function() {
-
-                if (mode === 'stop') {
-                    clearInterval(run);
-                }
-            }, 2000);
-            /*
-            function testFunction() {
-                message.channel.sendMessage('testing');
-            }
-            var run = setInterval(function() { testFunction() }, 1000);
-            if (args[0] === 'stop') {
-                clearInterval(run);
-            }
-            console.log('test command fired');
-
-            var run = setInterval(function() { testFunction() }, 2000);
-
-            function testFunction() {
-                message.channel.send('testing');
-                //console.log('testing');
-            }
-            function stopFunction() {
-                clearInterval(run);
-            }
-
-            if (args[0] === 'stop') {
-                stopFunction();
-                console.log('Attempted to stop test command');
-            } else {
-                testFunction();
-            }
-            */
+        
+        // Automatically run this command incase the bot crashes, it continues to run regardless if I start it.
+        // Check if current minute % 10 === 0 || minutes === 59
+        // Check author name, only I can call these commands.
+        // Bot only posts in certain channel with ID.
+        
+        if (message.autor.id != 218397146049806337) {
+            message.channel.send('You don\'t have permission to use this command');
+            return;
         }
+        if (message.channel.id == 307975805357522944) {
+            message.channel.send('I posted in <#307975805357522944>');
+        }
+        if (args[0] === 'stop') {
+            mode = 'stop';
+        } else 
+        if (args[0] === 'start') {
+            mode = 'test';
+        }
+        
+        let run = setInterval(function() {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort=2&limit=1', '', function(body) {
+                let data = JSON.parse(body).scratchpads[0];
+                let embed = new Discord.RichEmbed();
+
+                getKAData(message, labsApi, data.url.split('/')[5], function(body2) {
+                    embed.setColor("#1b964a");
+                    embed.setImage('https://www.khanacademy.org' + data.thumb);
+                    embed.setURL(data.url);
+                    embed.setTitle(data.title);
+                    embed.addField('Author', data.authorNickname, true);
+                    embed.addField('Votes', data.sumVotesIncremented, true);
+                    embed.addField('Spinoffs', data.spinoffCount, true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length, true);
+                    message.channel.sendEmbed(embed);
+                });
+            });
+            
+            if (mode === 'stop') {
+                clearInterval(run);
+            }
+        }, 10000);
     }
     /*
     else {

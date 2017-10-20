@@ -35,6 +35,7 @@ const commands = [
         "Badges <username> : Returns a user's badge counts.",
         "Browse <page> : Displays the top KA program on the hotlist.",
         "ProgramData <program-id> : Returns a program\'s data.",
+        "UserPrograms <username> : Returns a user's projects stats.",
     ],
 ];
 
@@ -241,7 +242,7 @@ client.on('message', message => {
         if (args[0] === 'userprograms' || args[0] === 'userPrograms') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("Badges", 'Use **`userPrograms <username>`** to get all a user\'s program stats.');
+            embed.addField("Badges", 'Use **`k.userPrograms <username>`** to get all a user\'s program stats.');
             message.channel.sendEmbed(embed);
         }
         else if (args.length === 0) {
@@ -558,12 +559,17 @@ client.on('message', message => {
             if (args[0] === 'start') {
                 mode = 'test';
             }
-
+            let run;
+            
             if (mode === 'test') {
-                message.channel.send(`Mode is: ${mode}`);
+                run = setInterval(function() {
+                    message.channel.send(`Mode is: ${mode}`);
+                }, 2000);
             }
             if (mode === 'stop') {
-                message.channel.send(`Mode is ${mode}`);
+                clearInterval(run);
+                run = 0;
+                message.channel.send(`Mode is: ${mode}`);
             }
             /*
             function testFunction() {

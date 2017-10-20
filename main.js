@@ -562,7 +562,7 @@ client.on('message', message => {
         // Check author name, only I can call these commands.
         // Bot only posts in certain channel with ID.
         
-        if (message.autor.id != 218397146049806337) {
+        if (message.author.id != 218397146049806337) {
             message.channel.send('You don\'t have permission to use this command');
             return;
         }

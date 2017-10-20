@@ -604,11 +604,10 @@ client.on('message', message => {
             if (currentTime % 10 === 0) {
                 getProgram();
             }
+            if (mode === 'stop') {
+                clearInterval(run);
+            }
         }, 1000);
-        
-        if (mode === 'stop') {
-            clearInterval(run);
-        }
     }
     /*
     else {

@@ -555,28 +555,31 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
-    if (command === 'test') {
         
+    if (command === 'update') {
         // Automatically run this command incase the bot crashes, it continues to run regardless if I start it.
         // Check if current minute % 10 === 0 || minutes === 59
         // Check author name, only I can call these commands.
         // Bot only posts in certain channel with ID.
         
+        // Check perms and channel.
         if (message.author.id != 218397146049806337) {
-            message.channel.send('You don\'t have permission to use this command');
+            message.channel.send('You don\'t have permission to use this command, sorry!');
             return;
         }
-        if (message.channel.id == 307975805357522944) {
-            message.channel.send('I posted in <#307975805357522944>');
+        if (message.channel.id != 371013264525492225) {
+            message.channel.send('I can\'t execute this command outside of the Dusktopia #recent-list channel, sorry!');
+            return;
         }
+        // Check arg.
         if (args[0] === 'stop') {
             mode = 'stop';
         } else 
         if (args[0] === 'start') {
-            mode = 'test';
+            mode = 'start';
         }
         
-        let run = setInterval(function() {
+        function getProgram() {
             getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort=2&limit=1', '', function(body) {
                 let data = JSON.parse(body).scratchpads[0];
                 let embed = new Discord.RichEmbed();
@@ -593,11 +596,19 @@ client.on('message', message => {
                     message.channel.sendEmbed(embed);
                 });
             });
-            
-            if (mode === 'stop') {
-                clearInterval(run);
+        }
+        
+        let currentTime;
+        let run = setInterval(function() {
+            currentTime = new Date().getSeconds(); // CHANGE
+            if (currentTime % 10 === 0) {
+                getProgram();
             }
-        }, 10000);
+        }, 1000);
+        
+        if (mode === 'stop') {
+            clearInterval(run);
+        }
     }
     /*
     else {

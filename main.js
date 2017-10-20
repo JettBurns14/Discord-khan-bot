@@ -525,14 +525,14 @@ client.on('message', message => {
                     let nick = JSON.parse(body).scratchpads[0].authorNickname;
                     let embed = new Discord.RichEmbed();
                     embed.setColor("#1b964a");
-                    //embed.setImage('https://www.khanacademy.org' + data.imagePath);
-                    //embed.setURL(data.url);
+                    embed.setImage('https://www.khanacademy.org' + body.scratchpads[0].imagePath);
+                    embed.setURL(body.scratchpads[0].url);
                     embed.addField(nick, '@'+args[0], true);
                     embed.addField('Programs:', numPrograms , true);
                     embed.addField('Total Votes:', numVotes , true);
                     embed.addField('Total Spinoffs:', numSpinoffs , true);
-                    embed.addField('Average Votes Received:', Math.round((numVotes / numPrograms) * 100) / 100);
-                    embed.addField('Average Spin-offs Received:', Math.round((numSpinoffs / numPrograms) * 100) / 100);
+                    embed.addField('Average Votes Received:', Math.round((numVotes / numPrograms) * 100) / 100, true);
+                    embed.addField('Average Spin-offs Received:', Math.round((numSpinoffs / numPrograms) * 100) / 100, true);
                     // Average votes received = Math.round((numVotes / numPrograms) * 100) / 100
                     // Average spinoffs received = Math.round((numSpinoffs / numPrograms) * 100) / 100          
                     message.channel.sendEmbed(embed);
@@ -560,7 +560,6 @@ client.on('message', message => {
                 mode = 'test';
             }
             let run = setInterval(function() {
-                message.channel.send(`Mode is: ${mode}`);
 
                 if (mode === 'stop') {
                     clearInterval(run);

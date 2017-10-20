@@ -513,6 +513,8 @@ client.on('message', message => {
         if (args.length === 1) {
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/scratchpads?username=' + args[0] + '&limit=1000', '', function(body) {
                 let numPrograms = JSON.parse(body).scratchpads.length;
+                let sbody = JSON.parse(body).scratchpads;
+                
                 if (numPrograms > 0) {
                     let numVotes = 0;
                     let numSpinoffs = 0; 
@@ -526,8 +528,8 @@ client.on('message', message => {
                     let embed = new Discord.RichEmbed();
                     
                     embed.setColor("#1b964a");
-                    embed.setThumbnail('https://www.khanacademy.org' + JSON.parse(body).scratchpads[0].imagePath);
-                    embed.setURL(JSON.parse(body).scratchpads[0].url);
+                    embed.setImage('https://www.khanacademy.org' + sbody[0].thumb);
+                    embed.setURL(sbody[0].url);
                     embed.addField(nick, `@${args[0]}`, true);
                     embed.addField('Programs:', numPrograms , true);
                     embed.addField('Total Votes:', numVotes , true);

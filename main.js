@@ -565,7 +565,7 @@ client.on('message', message => {
                 run = setInterval(function() {
                     message.channel.send(`Mode is: ${mode}`);
                 }, 2000);
-            }
+            } else
             if (mode === 'stop') {
                 clearInterval(run);
                 run = 0;

@@ -528,7 +528,7 @@ client.on('message', message => {
                     let embed = new Discord.RichEmbed();
                     
                     embed.setColor("#1b964a");
-                    embed.setImage('https://www.khanacademy.org' + sbody[0].thumb);
+                    embed.setThumbnail('https://www.khanacademy.org' + sbody[0].thumb);
                     embed.setURL(sbody[0].url);
                     embed.addField(nick, `@${args[0]}`, true);
                     embed.addField('Programs:', numPrograms , true);

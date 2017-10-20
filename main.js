@@ -16,7 +16,8 @@ const commands = [
         "Talk : Returns random phrases.",
         "Hello : Says hello back.",
         "Ping : Returns 'pong'.",
-        "Invite : Returns invite link for KhanBot",
+        "Invite : Returns invite link for KhanBot.",
+        "Uptime : Returns time since I last launched.",
     ],
     // Math
     [

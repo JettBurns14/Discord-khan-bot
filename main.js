@@ -525,9 +525,9 @@ client.on('message', message => {
                     let nick = JSON.parse(body).scratchpads[0].authorNickname;
                     let embed = new Discord.RichEmbed();
                     embed.setColor("#1b964a");
-                    embed.setImage('https://www.khanacademy.org' + body.scratchpads[0].imagePath);
-                    embed.setURL(body.scratchpads[0].url);
-                    embed.addField(nick, '@'+args[0], true);
+                    embed.setImage('https://www.khanacademy.org' + JSON.parse(body).scratchpads[0].imagePath);
+                    embed.setURL(JSON.parse(body).scratchpads[0].url);
+                    embed.addField(nick, `@${args[0]}`, true);
                     embed.addField('Programs:', numPrograms , true);
                     embed.addField('Total Votes:', numVotes , true);
                     embed.addField('Total Spinoffs:', numSpinoffs , true);

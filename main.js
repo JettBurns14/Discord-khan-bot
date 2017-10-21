@@ -77,6 +77,7 @@ var greetings = [
     "Hey",
     "Hiya",
     "Hi there",
+    "Heyyaz",
     
 ];
 
@@ -558,11 +559,11 @@ client.on('message', message => {
         
     if (command === 'update') {
         // Automatically run this command incase the bot crashes, it continues to run regardless if I start it.
-        // Check if current minute % 10 === 0 || minutes === 59
         // Check author name, only I can call these commands.
         // Bot only posts in certain channel with ID.
         // Maybe let admin use command.
         // Add timestamp.
+        // Instead of posting a new message every interval, it just edits the message so there is always one.
         
         // Check perms and channel.
         if (message.author.id != 218397146049806337) {

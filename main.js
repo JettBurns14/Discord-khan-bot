@@ -561,6 +561,8 @@ client.on('message', message => {
         // Check if current minute % 10 === 0 || minutes === 59
         // Check author name, only I can call these commands.
         // Bot only posts in certain channel with ID.
+        // Maybe let admin use command.
+        // Add timestamp.
         
         // Check perms and channel.
         if (message.author.id != 218397146049806337) {
@@ -593,6 +595,7 @@ client.on('message', message => {
                     embed.addField('Votes', data.sumVotesIncremented, true);
                     embed.addField('Spinoffs', data.spinoffCount, true);
                     embed.addField('Flags', JSON.parse(body2).flags.length, true);
+                    embed.setFooter(`Requested by ${message.author.username} at ${message.createdAt}`);
                     message.channel.sendEmbed(embed);
                 });
             });

@@ -120,12 +120,11 @@ var status = [
 
 client.on('ready', () => {
     var games = [
-        `${prefix}help`,
-        `${client.guilds.size} Guilds`,
+        `${client.guilds.size} Servers`,
         `${client.users.size} Users`,
         `${client.channels.size} Channels`
     ];
-    client.user.setPresence({ game: { name: games[Math.round(Math.random()*games.length)], type: 0 } });
+    client.user.setPresence({ game: { name: `${prefix}help ${games[Math.round(Math.random()*games.length)]}`, type: 0 } });
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
     console.log(`I have started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);

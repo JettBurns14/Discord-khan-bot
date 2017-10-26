@@ -265,16 +265,15 @@ client.on('message', message => {
     if (command === 'userinfo') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
-                let data = JSON.parse(body);
-                let kaid = data.kaid;
-
-                if (data.dateJoined === null) {
+                if (!JSON.parse(body)) {
                     let embed = new Discord.RichEmbed();
                     embed.setColor('#ff0000');
                     embed.addField('Error', 'That username does not exist, use **`k.help userinfo`** for more.');
                     message.channel.sendEmbed(embed);
                     return;
                 }
+                let data = JSON.parse(body);
+                let kaid = data.kaid;
 
                 let d = new Date(data.dateJoined);
                 let date = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);

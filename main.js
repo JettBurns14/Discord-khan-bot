@@ -338,10 +338,10 @@ client.on('message', message => {
                 embed.setURL(sdata.url);
                 embed.setTitle(sdata.title);
                 embed.addField('Author', data.creatorProfile.nickname, true);
-                embed.addField('Votes', sdata.sumVotesIncremented, true);
-                embed.addField('Spinoffs', sdata.spinoffCount, true);
+                embed.addField('Votes', sdata.sumVotesIncremented.toLocaleString(), true);
+                embed.addField('Spinoffs', sdata.spinoffCount.toLocaleString(), true);
                 embed.addField('Created', c, true);
-                embed.addField('Flags', sdata.flags.length, true);
+                embed.addField('Flags', sdata.flags.length.toLocaleString(), true);
                 embed.addField('Hidden', sdata.hideFromHotlist, true);
                 message.channel.sendEmbed(embed);
             });
@@ -396,9 +396,9 @@ client.on('message', message => {
                     embed.setURL(data.url);
                     embed.setTitle(data.title);
                     embed.addField('Author', data.authorNickname, true);
-                    embed.addField('Votes', data.sumVotesIncremented, true);
-                    embed.addField('Spinoffs', data.spinoffCount, true);
-                    embed.addField('Flags', JSON.parse(body2).flags.length, true);
+                    embed.addField('Votes', data.sumVotesIncremented.toLocaleString(), true);
+                    embed.addField('Spinoffs', data.spinoffCount.toLocaleString(), true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length.toLocaleString(), true);
                     message.channel.sendEmbed(embed);
                 });
 
@@ -437,13 +437,13 @@ client.on('message', message => {
                         //embed.setImage('https://www.khanacademy.org' + data.imagePath);
                         //embed.setURL(data.url);
                         embed.addField(nick, '@'+args[0], true);
-                        embed.addField('Questions', stats.questions , true);
-                        embed.addField('Answers', stats.answers, true);
-                        embed.addField('Evaluations', stats.projectanswers , true);
-                        embed.addField('Tips&Thx', stats.comments , true);
-                        embed.addField('Comments', stats.replies , true);
-                        embed.addField('Votes', stats.votes , true);
-                        embed.addField('Flags', stats.flags , true);
+                        embed.addField('Questions', stats.questions.toLocaleString() , true);
+                        embed.addField('Answers', stats.answers.toLocaleString(), true);
+                        embed.addField('Evaluations', stats.projectanswers.toLocaleString() , true);
+                        embed.addField('Tips&Thx', stats.comments.toLocaleString() , true);
+                        embed.addField('Comments', stats.replies.toLocaleString() , true);
+                        embed.addField('Votes', stats.votes.toLocaleString() , true);
+                        embed.addField('Flags', stats.flags.toLocaleString() , true);
                         message.channel.sendEmbed(embed);
                     }
                     catch(discussWidget) {
@@ -471,9 +471,11 @@ client.on('message', message => {
 
                     getKAData(message, 'http://www.khanacademy.org/api/internal/user/' + kaid + '/profile/widgets', '', function(widgets) {
                         try {
-                            let badgeWidget = JSON.parse(widgets).filter(function(widget){return widget.widgetId === "BadgeCountWidget"})[0].renderData.badgeCountData.counts;
+                            let badgeWidget = JSON.parse(widgets).filter(function(widget) {
+                                return widget.widgetId === "BadgeCountWidget";
+                            })[0].renderData.badgeCountData.counts;
                             badgeWidget.forEach(function(counts) {
-                                badges.push(counts.count);
+                                badges.push(counts.count.toLocaleString());
                                 types.push(counts.typeLabel);
                             });
                             let embed = new Discord.RichEmbed();
@@ -531,9 +533,9 @@ client.on('message', message => {
                     embed.setThumbnail('https://www.khanacademy.org' + sbody[0].thumb);
                     embed.setURL(sbody[0].url);
                     embed.addField(nick, `@${args[0]}`, true);
-                    embed.addField('Programs:', numPrograms , true);
-                    embed.addField('Total Votes:', numVotes , true);
-                    embed.addField('Total Spinoffs:', numSpinoffs , true);
+                    embed.addField('Programs:', numPrograms.toLocaleString() , true);
+                    embed.addField('Total Votes:', numVotes.toLocaleString() , true);
+                    embed.addField('Total Spinoffs:', numSpinoffs.toLocaleString() , true);
                     embed.addField('Average Votes Received:', Math.round((numVotes / numPrograms) * 100) / 100, true);
                     embed.addField('Average Spin-offs Received:', Math.round((numSpinoffs / numPrograms) * 100) / 100, true);
                     // Average votes received = Math.round((numVotes / numPrograms) * 100) / 100
@@ -591,9 +593,9 @@ client.on('message', message => {
                     embed.setURL(data.url);
                     embed.setTitle(data.title);
                     embed.addField('Author', data.authorNickname, true);
-                    embed.addField('Votes', data.sumVotesIncremented, true);
-                    embed.addField('Spinoffs', data.spinoffCount, true);
-                    embed.addField('Flags', JSON.parse(body2).flags.length, true);
+                    embed.addField('Votes', data.sumVotesIncremented.toLocaleString(), true);
+                    embed.addField('Spinoffs', data.spinoffCount.toLocaleString(), true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length.toLocaleString(), true);
                     embed.setFooter(`Requested by ${message.author.username} at ${message.createdAt}`);
                     message.channel.sendEmbed(embed);
                 });

@@ -1,12 +1,10 @@
 /**
-  I know, the code is sloppy, but that's not priority. :P
-  
+    Finally cleaning up this code.
 **/
 
 "use strict";
 
 const Discord = require('discord.js');
-//const = require("./khanbot.json");
 const request = require('request');
 const client = new Discord.Client();
 const prefix = 'k.';
@@ -18,7 +16,8 @@ const commands = [
         "Talk : Returns random phrases.",
         "Hello : Says hello back.",
         "Ping : Returns 'pong'.",
-        "Invite : Returns invite link for KhanBot",
+        "Invite : Returns invite link for KhanBot.",
+        "Uptime : Returns time since I last launched.",
     ],
     // Math
     [
@@ -37,6 +36,7 @@ const commands = [
         "Badges <username> : Returns a user's badge counts.",
         "Browse <page> : Displays the top KA program on the hotlist.",
         "ProgramData <program-id> : Returns a program\'s data.",
+        "UserPrograms <username> : Returns a user's projects stats.",
     ],
 ];
 
@@ -51,6 +51,34 @@ var responses = [
     "Agreed.",
     "Bye.",
     "Boi.",
+    "Nah.",
+    "Wut.",
+    "Wat.",
+    "Impossible! :O",
+    "No way!",
+    "Of course!",
+    "Why you asking me?",
+    "Don't ask me!",
+    "I had nothing to do with it!",
+    "Leave me alone. :P",
+    "<:Thonk:358268256110510091>",
+];
+
+var greetings = [
+    "Hai",
+    "Hi",
+    "Sup",
+    "Hello",
+    "Yo, wus up",
+    "Greetings",
+    "Hola",
+    "Good day",
+    "Howdy",
+    "Hey",
+    "Hiya",
+    "Hi there",
+    "Heyyaz",
+    
 ];
 
 var getKAData = function(message, api, user, callback) {
@@ -78,9 +106,11 @@ var millisToTime = function(milliseconds) {
 
 var totalTime = 0;
 var statusNum = 0;
+var mode;
 
 var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
 var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
+var labsApi = 'https://www.khanacademy.org/api/labs/scratchpads/';
 
 var status = [
     'online',
@@ -89,15 +119,22 @@ var status = [
 ];
 
 client.on('ready', () => {
-    //client.user.setGame({name: prefix + 'help'});
-    //client.user.setGame({type: 1, name: prefix + "help", url: ""});
-    client.user.setPresence({ game: { name: `${prefix}help`, type: 0 } });
+    var games = [
+        `${client.guilds.size} Servers`,
+        `${client.users.size} Users`,
+        `${client.channels.size} Channels`
+    ];
+    client.user.setPresence({ game: { name: `${prefix}help | ${games[Math.round(Math.random()*games.length)]}`, type: 0 } });
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
+    console.log(`I have started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
   
     setInterval(function() {
         totalTime++;
     }, 1);
+    
+    //client.user.setGame({name: prefix + 'help'});
+    //client.user.setGame({type: 1, name: prefix + "help", url: ""});
     //client.user.setStatus(status[Math.round(Math.random()*2)]);
 });
 
@@ -112,12 +149,15 @@ client.on('message', message => {
 
     var args = message.content.split(" ").slice(1);
     args[0] = args[0].toLowerCase();
+    //var args = message.content.split(" ").slice(1);//.toString().toLowerCase();
+    //var args = argsU.toLowerCase();
+    //args = args.toLowerCase();
 
     if (command === 'ping') {
         message.channel.sendMessage("Pong!");
     } else
-    if (command === "hello") {
-        message.channel.sendMessage(`Hello ${message.author.username}!`);
+    if (command === 'hello' || command === 'hi') {
+        message.channel.sendMessage(`${greetings[Math.floor(Math.random()*(greetings.length))]} ${message.author.username}!`);
     } else
     if (command === 'talk') {
         message.channel.sendMessage(responses[Math.round(Math.random(0, 1)*10)]);
@@ -201,6 +241,12 @@ client.on('message', message => {
             embed.setColor("#ffff00");
             embed.addField("Badges", 'Use **`k.badges <username>`** for a user\'s badge counts.');
             message.channel.sendEmbed(embed);
+        } else
+        if (args[0] === 'userprograms' || args[0] === 'userPrograms') {
+            let embed = new Discord.RichEmbed(); 
+            embed.setColor("#ffff00");
+            embed.addField("Badges", 'Use **`k.userPrograms <username>`** to get all a user\'s program stats.');
+            message.channel.sendEmbed(embed);
         }
         else if (args.length === 0) {
             let embed = new Discord.RichEmbed(); 
@@ -221,16 +267,15 @@ client.on('message', message => {
     if (command === 'userinfo') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
-                let data = JSON.parse(body);
-                let kaid = data.kaid;
-
-                if (data.dateJoined === null) {
+                if (!JSON.parse(body)) {
                     let embed = new Discord.RichEmbed();
                     embed.setColor('#ff0000');
                     embed.addField('Error', 'That username does not exist, use **`k.help userinfo`** for more.');
                     message.channel.sendEmbed(embed);
                     return;
                 }
+                let data = JSON.parse(body);
+                let kaid = data.kaid;
 
                 let d = new Date(data.dateJoined);
                 let date = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
@@ -251,10 +296,10 @@ client.on('message', message => {
                         embed.setColor('#0DB221');
                         // embed.setThumbnail(data.avatarSrc);
                         embed.addField(data.nickname, '@'+args[0], true);
-                        embed.addField('Streak:', data.streakLastLength + ' days', true);
-                        embed.addField('Videos:', data.countVideosCompleted, true);
-                        embed.addField('Badges:', badges, true);
-                        embed.addField('Points:', data.points, true);
+                        embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
+                        embed.addField('Videos:', data.countVideosCompleted.toLocaleString(), true);
+                        embed.addField('Badges:', badges.toLocaleString(), true);
+                        embed.addField('Points:', data.points.toLocaleString(), true);
                         embed.addField('Joined on:', date, true);
                         message.channel.sendEmbed(embed);
                     });
@@ -279,6 +324,7 @@ client.on('message', message => {
         }
 
     } else
+        
     if (command === 'programdata') {
         if (args.length === 1) {
             getKAData(message, programApi, args[0], function(body) {
@@ -294,10 +340,10 @@ client.on('message', message => {
                 embed.setURL(sdata.url);
                 embed.setTitle(sdata.title);
                 embed.addField('Author', data.creatorProfile.nickname, true);
-                embed.addField('Votes', sdata.sumVotesIncremented, true);
-                embed.addField('Spinoffs', sdata.spinoffCount, true);
+                embed.addField('Votes', sdata.sumVotesIncremented.toLocaleString(), true);
+                embed.addField('Spinoffs', sdata.spinoffCount.toLocaleString(), true);
                 embed.addField('Created', c, true);
-                embed.addField('Flags', sdata.flags.length, true);
+                embed.addField('Flags', sdata.flags.length.toLocaleString(), true);
                 embed.addField('Hidden', sdata.hideFromHotlist, true);
                 message.channel.sendEmbed(embed);
             });
@@ -314,6 +360,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else 
+        
     if (command === 'browse') {
         var page = null;
         if (args[0] === 'hot') {
@@ -326,6 +373,7 @@ client.on('message', message => {
             page = 5;
         }
         if (page !== null) {
+            /*
             getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort='+page+'&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
                 let data = JSON.parse(body).scratchpads[0];
 
@@ -338,6 +386,25 @@ client.on('message', message => {
                 embed.addField('Votes', data.sumVotesIncremented, true);
                 embed.addField('Spinoffs', data.spinoffCount, true);
                 message.channel.sendEmbed(embed);
+            });*/
+            // Load the top program of any of the pages.
+            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort='+page+'&limit=1&page=0&subject=all&topic_id=xffde7c31&_=1492819743301', '', function(body) {
+                let data = JSON.parse(body).scratchpads[0];
+                let embed = new Discord.RichEmbed();
+
+                getKAData(message, labsApi, data.url.split('/')[5], function(body2) {
+                    embed.setColor("#1b964a");
+                    embed.setImage('https://www.khanacademy.org' + data.thumb);
+                    embed.setURL(data.url);
+                    embed.setTitle(data.title);
+                    embed.addField('Author', data.authorNickname, true);
+                    embed.addField('Votes', data.sumVotesIncremented.toLocaleString(), true);
+                    embed.addField('Spinoffs', data.spinoffCount.toLocaleString(), true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length.toLocaleString(), true);
+                    message.channel.sendEmbed(embed);
+                });
+
+                //embed.addField('Flags', data.flags.length, true);
             });
         } else
         if (page === null) {
@@ -353,6 +420,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
+        
     if (command === 'discussion') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
@@ -371,13 +439,13 @@ client.on('message', message => {
                         //embed.setImage('https://www.khanacademy.org' + data.imagePath);
                         //embed.setURL(data.url);
                         embed.addField(nick, '@'+args[0], true);
-                        embed.addField('Questions', stats.questions , true);
-                        embed.addField('Answers', stats.answers, true);
-                        embed.addField('Evaluations', stats.projectanswers , true);
-                        embed.addField('Tips&Thx', stats.comments , true);
-                        embed.addField('Comments', stats.replies , true);
-                        embed.addField('Votes', stats.votes , true);
-                        embed.addField('Flags', stats.flags , true);
+                        embed.addField('Questions', stats.questions.toLocaleString() , true);
+                        embed.addField('Answers', stats.answers.toLocaleString(), true);
+                        embed.addField('Evaluations', stats.projectanswers.toLocaleString() , true);
+                        embed.addField('Tips&Thx', stats.comments.toLocaleString() , true);
+                        embed.addField('Comments', stats.replies.toLocaleString() , true);
+                        embed.addField('Votes', stats.votes.toLocaleString() , true);
+                        embed.addField('Flags', stats.flags.toLocaleString() , true);
                         message.channel.sendEmbed(embed);
                     }
                     catch(discussWidget) {
@@ -393,6 +461,7 @@ client.on('message', message => {
             message.channel.sendEmbed(embed);
         }
     } else
+        
     if (command === 'badges') {
         if (args.length === 1) {
             getKAData(message, userApi, args[0], function(body) {
@@ -404,9 +473,11 @@ client.on('message', message => {
 
                     getKAData(message, 'http://www.khanacademy.org/api/internal/user/' + kaid + '/profile/widgets', '', function(widgets) {
                         try {
-                            let badgeWidget = JSON.parse(widgets).filter(function(widget){return widget.widgetId === "BadgeCountWidget"})[0].renderData.badgeCountData.counts;
+                            let badgeWidget = JSON.parse(widgets).filter(function(widget) {
+                                return widget.widgetId === "BadgeCountWidget";
+                            })[0].renderData.badgeCountData.counts;
                             badgeWidget.forEach(function(counts) {
-                                badges.push(counts.count);
+                                badges.push(counts.count.toLocaleString());
                                 types.push(counts.typeLabel);
                             });
                             let embed = new Discord.RichEmbed();
@@ -440,6 +511,109 @@ client.on('message', message => {
             embed.addField('Error', 'The correct usage is **`k.badges <username>`**.');
             message.channel.sendEmbed(embed);
         }
+    } else
+        
+    if (command === 'userprograms') {
+        if (args.length === 1) {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/user/scratchpads?username=' + args[0] + '&limit=1000', '', function(body) {
+                let numPrograms = JSON.parse(body).scratchpads.length;
+                let sbody = JSON.parse(body).scratchpads;
+                
+                if (numPrograms > 0) {
+                    let numVotes = 0;
+                    let numSpinoffs = 0; 
+                    
+                    for (var i = 0; i < numPrograms; ++i) {
+                        var scratchpad = JSON.parse(body).scratchpads[i];
+                        numVotes += scratchpad.sumVotesIncremented;
+                        numSpinoffs += scratchpad.spinoffCount;
+                    }
+                    let nick = JSON.parse(body).scratchpads[0].authorNickname;
+                    let embed = new Discord.RichEmbed();
+                    
+                    embed.setColor("#1b964a");
+                    embed.setThumbnail('https://www.khanacademy.org' + sbody[0].thumb);
+                    embed.setURL(sbody[0].url);
+                    embed.addField(nick, `@${args[0]}`, true);
+                    embed.addField('Programs:', numPrograms.toLocaleString() , true);
+                    embed.addField('Total Votes:', numVotes.toLocaleString() , true);
+                    embed.addField('Total Spinoffs:', numSpinoffs.toLocaleString() , true);
+                    embed.addField('Average Votes Received:', Math.round((numVotes / numPrograms) * 100) / 100, true);
+                    embed.addField('Average Spin-offs Received:', Math.round((numSpinoffs / numPrograms) * 100) / 100, true);
+                    // Average votes received = Math.round((numVotes / numPrograms) * 100) / 100
+                    // Average spinoffs received = Math.round((numSpinoffs / numPrograms) * 100) / 100          
+                    message.channel.sendEmbed(embed);
+                } else {
+                    let embed = new Discord.RichEmbed();
+                    embed.setColor('#ff0000');
+                    embed.addField('Error', ':x: That user has no programs, use **`k.help userPrograms`** for more.');
+                    message.channel.sendEmbed(embed);
+                }
+            });
+        } else
+        if (args.length !== 1) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', ':x: The correct usage is **`k.userPrograms <username>`**.');
+            message.channel.sendEmbed(embed);
+        }
+    } else
+        
+    if (command === 'update') {
+        // Automatically run this command incase the bot crashes, it continues to run regardless if I start it.
+        // Check author name, only I can call these commands.
+        // Bot only posts in certain channel with ID.
+        // Maybe let admin use command.
+        // Add timestamp.
+        // Instead of posting a new message every interval, it just edits the message so there is always one.
+        
+        // Check perms and channel.
+        if (message.author.id != 218397146049806337) {
+            message.channel.send('You don\'t have permission to use this command, sorry!');
+            return;
+        }
+        if (message.channel.id != 371013264525492225) {
+            message.channel.send('I can\'t execute this command outside of the Dusktopia #recent-list channel, sorry!');
+            return;
+        }
+        // Check arg.
+        if (args[0] === 'stop') {
+            mode = 'stop';
+        } else 
+        if (args[0] === 'start') {
+            mode = 'start';
+        }
+        
+        function getProgram() {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/scratchpads/top?casing=camel&sort=2&limit=1', '', function(body) {
+                let data = JSON.parse(body).scratchpads[0];
+                let embed = new Discord.RichEmbed();
+
+                getKAData(message, labsApi, data.url.split('/')[5], function(body2) {
+                    embed.setColor("#1b964a");
+                    embed.setImage('https://www.khanacademy.org' + data.thumb);
+                    embed.setURL(data.url);
+                    embed.setTitle(data.title);
+                    embed.addField('Author', data.authorNickname, true);
+                    embed.addField('Votes', data.sumVotesIncremented.toLocaleString(), true);
+                    embed.addField('Spinoffs', data.spinoffCount.toLocaleString(), true);
+                    embed.addField('Flags', JSON.parse(body2).flags.length.toLocaleString(), true);
+                    embed.setFooter(`Requested by ${message.author.username} at ${message.createdAt}`);
+                    message.channel.sendEmbed(embed);
+                });
+            });
+        }
+        
+        let currentTime;
+        let run = setInterval(function() {
+            currentTime = new Date().getSeconds(); // CHANGE
+            if (currentTime % 10 === 0) {
+                getProgram();
+            }
+            if (mode === 'stop') {
+                clearInterval(run);
+            }
+        }, 1000);
     }
     /*
     else {

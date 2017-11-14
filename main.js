@@ -298,7 +298,7 @@ client.on('message', message => {
                         embed.addField(data.nickname, '@'+args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
                         embed.addField('Videos:', data.countVideosCompleted.toLocaleString(), true);
-                        embed.addField('Badges:', badges.toLocaleString(), true);
+                        embed.addField('Badges:', (badges == null ? 'Not Public' : badges.toLocaleString()), true);
                         embed.addField('Points:', data.points.toLocaleString(), true);
                         embed.addField('Joined on:', date, true);
                         message.channel.sendEmbed(embed);

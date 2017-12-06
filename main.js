@@ -294,7 +294,7 @@ client.on('message', message => {
                         }
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
-                        embed.setThumbnail(data.background.thumbSrc);
+                        embed.setThumbnail(data.avatar.imagePath.replace(/\/images\/avatars\/svg\/(.*?)\.svg/ig, (match, g) => `https://www.kasandbox.org/programming-images/avatars/${g}.png`));
                         embed.addField(data.nickname, '@'+args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
                         embed.addField('Videos:', data.countVideosCompleted.toLocaleString(), true);
@@ -482,7 +482,6 @@ client.on('message', message => {
                             });
                             let embed = new Discord.RichEmbed();
                             embed.setColor('#0DB221');
-                            //embed.setThumbnail(data.avatarSrc);
                             for (var i = 0; i < badges.length; i++) {
                                 embed.addField(types[i], badges[i], true);
                             }

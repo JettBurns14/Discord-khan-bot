@@ -126,6 +126,7 @@ client.on('ready', () => {
     ];
     client.user.setPresence({ game: { name: `${prefix}help | ${games[Math.round(Math.random()*games.length)]}`, type: 0 } });
     client.user.setUsername('KhanBot');
+    client.users.find('id', '218397146049806337').send(':white_check_mark: I am online and at your service, Jett!');
     console.log('I am ready Jett!');
     console.log(`I have started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
   

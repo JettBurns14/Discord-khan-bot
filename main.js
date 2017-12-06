@@ -312,7 +312,8 @@ client.on('message', message => {
                     message.channel.sendEmbed(embed);
                 }
             });
-        } else if (args.length !== 1) {
+        } else 
+        if (args.length !== 1) {
             let embed = new Discord.RichEmbed();
             embed.setColor('#ff0000');
             embed.addField('Error', 'The correct usage is **`k.userInfo <username>`**.');

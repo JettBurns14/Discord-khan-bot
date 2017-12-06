@@ -295,12 +295,13 @@ client.on('message', message => {
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
                         embed.setThumbnail(data.background.thumbSrc);
-                        embed.addField(data.nickname, '@'+args[0], true);
-                        embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
-                        embed.addField('Videos:', data.countVideosCompleted.toLocaleString(), true);
+                        embed.setURL('https://www.khanacademy.org' + data.profileRoot);
+                        embed.addField(data.nickname, '@' + args[0], true);
+                        embed.addField('Streak:', data.streakLength.toLocaleString() + ' days', true);
+                        embed.addField('Videos:', (d == null ? 'Not Public' : data.countVideosCompleted.toLocaleString()), true);
                         embed.addField('Badges:', (badges == null ? 'Not Public' : badges.toLocaleString()), true);
-                        embed.addField('Points:', data.points.toLocaleString(), true);
-                        embed.addField('Joined on:', date, true);
+                        embed.addField('Points:', (d == null ? 'Not Public' : data.points.toLocaleString()), true);
+                        embed.addField('Joined on:', (d == null ? 'Not Public' : date), true);
                         message.channel.sendEmbed(embed);
                     });
                 } else

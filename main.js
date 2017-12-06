@@ -294,7 +294,7 @@ client.on('message', message => {
                         }
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
-                        embed.setThumbnail(data.background.thumbSrc);
+                        embed.setThumbnail(data.avatar.imagePath.replace(/\/images\/avatars\/svg\/(.*?)\.svg/ig, (match, g) => `https://www.kasandbox.org/programming-images/avatars/${g}.png`));
                         embed.setURL('https://www.khanacademy.org' + data.profileRoot);
                         embed.addField(data.nickname, '@' + args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
@@ -629,4 +629,6 @@ client.on('message', message => {
     }*/
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN)
+    .then(() => {})
+    .catch(() => console.log("Invalid token"));

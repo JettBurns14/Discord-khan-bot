@@ -470,6 +470,7 @@ client.on('message', message => {
                 if (kaid.substring(0, 5) === 'kaid_') {
                     var badges = [];
                     var types = [];
+                    var badgeNum = 0;
 
                     getKAData(message, 'http://www.khanacademy.org/api/internal/user/' + kaid + '/profile/widgets', '', function(widgets) {
                         try {
@@ -479,13 +480,15 @@ client.on('message', message => {
                             badgeWidget.forEach(function(counts) {
                                 badges.push(counts.count.toLocaleString());
                                 types.push(counts.typeLabel);
+                                badgeNum += counts.count;
                             });
                             let embed = new Discord.RichEmbed();
                             embed.setColor('#0DB221');
-                            //embed.setThumbnail(data.avatarSrc);
+                            embed.setThumbnail(JSON.parse(body).publicBadges[0].iconSrc);
                             for (var i = 0; i < badges.length; i++) {
                                 embed.addField(types[i], badges[i], true);
                             }
+                            embed.addField('Total', badgeNum, true);
                             message.channel.sendEmbed(embed);
                         }
                         catch(badgeWidget) {

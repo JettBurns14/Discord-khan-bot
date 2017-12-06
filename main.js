@@ -294,7 +294,7 @@ client.on('message', message => {
                         }
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
-                        // embed.setThumbnail(data.avatarSrc);
+                        embed.setThumbnail(data.background.thumbSrc);
                         embed.addField(data.nickname, '@'+args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
                         embed.addField('Videos:', data.countVideosCompleted.toLocaleString(), true);

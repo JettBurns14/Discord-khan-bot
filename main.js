@@ -126,13 +126,19 @@ client.on('ready', () => {
     ];
     client.user.setPresence({ game: { name: `${prefix}help | ${games[Math.round(Math.random()*games.length)]}`, type: 0 } });
     client.user.setUsername('KhanBot');
-    client.users.find('id', '218397146049806337').send(':white_check_mark: I am online and at your service, Jett!');
     console.log('I am ready Jett!');
     console.log(`I have started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
   
     setInterval(function() {
         totalTime++;
     }, 1);
+    
+    let embed = new Discord.RichEmbed();
+    embed.setColor('#00ffcc');
+    embed.setThumbnail('https://media.discordapp.net/attachments/372916099114729472/388913604377968662/image.png');
+    embed.addField('Ready', 'I am online and at your service, Jett!');
+    embed.setTimestamp();
+    client.users.find('id', '218397146049806337').send({ embed });
     
     //client.user.setGame({name: prefix + 'help'});
     //client.user.setGame({type: 1, name: prefix + "help", url: ""});

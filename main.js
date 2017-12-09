@@ -134,7 +134,7 @@ client.on('ready', () => {
     }, 1);
     
     let embed = new Discord.RichEmbed();
-    embed.setColor('#00ffcc');
+    embed.setColor('#0DB221');
     embed.setThumbnail('https://media.discordapp.net/attachments/372916099114729472/388913604377968662/image.png');
     embed.addField('Ready', 'I am online and at your service, Jett!');
     embed.setTimestamp();

@@ -308,7 +308,7 @@ client.on('message', message => {
                         embed.addField('Videos:', (d == null ? 'Not Public' : data.countVideosCompleted.toLocaleString()), true);
                         embed.addField('Badges:', (badges == null ? 'Not Public' : badges.toLocaleString()), true);
                         embed.addField('Points:', (d == null ? 'Not Public' : data.points.toLocaleString()), true);
-                        embed.addField('Joined on:', (d == null ? 'Not Public' : date), true);
+                        embed.addField('Joined on:', (data.dateJoined == null ? 'Not Public' : date), true);
                         message.channel.sendEmbed(embed);
                     });
                 } else

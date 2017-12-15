@@ -305,9 +305,9 @@ client.on('message', message => {
                         embed.setURL('https://www.khanacademy.org' + data.profileRoot);
                         embed.addField(data.nickname, '@' + args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);
-                        embed.addField('Videos:', (d == null ? 'Not Public' : data.countVideosCompleted.toLocaleString()), true);
+                        embed.addField('Videos:', (data.dateJoined == null ? 'Not Public' : data.countVideosCompleted.toLocaleString()), true);
                         embed.addField('Badges:', (badges == null ? 'Not Public' : badges.toLocaleString()), true);
-                        embed.addField('Points:', (d == null ? 'Not Public' : data.points.toLocaleString()), true);
+                        embed.addField('Points:', (data.dateJoined == null ? 'Not Public' : data.points.toLocaleString()), true);
                         embed.addField('Joined on:', (data.dateJoined == null ? 'Not Public' : date), true);
                         message.channel.sendEmbed(embed);
                     });

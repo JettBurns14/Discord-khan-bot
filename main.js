@@ -108,7 +108,7 @@ var totalTime = 0;
 var statusNum = 0;
 var mode;
 
-var userApi = "http://www.khanacademy.org/api/internal/user/profile?username=";
+var userApi = "https://www.khanacademy.org/api/internal/user/profile?username=";
 var programApi = 'https://www.khanacademy.org/api/internal/show_scratchpad?scratchpad_id=';
 var labsApi = 'https://www.khanacademy.org/api/labs/scratchpads/';
 
@@ -301,7 +301,7 @@ client.on('message', message => {
                         }
                         let embed = new Discord.RichEmbed();
                         embed.setColor('#0DB221');
-                        embed.setThumbnail(data.avatar.imagePath.replace(/\/images\/avatars\/svg\/(.*?)\.svg/ig, (match, g) => `https://www.kasandbox.org/programming-images/avatars/${g}.png`));
+                        embed.setThumbnail(data.avatar.imagePath.replace(/\/images\/avatars\/(?:svg\/)?(.*?)\.(?:svg|png)/ig, (match, g) => `https://www.kasandbox.org/programming-images/avatars/${g}.png`));
                         embed.setURL('https://www.khanacademy.org' + data.profileRoot);
                         embed.addField(data.nickname, '@' + args[0], true);
                         embed.addField('Streak:', data.streakLastLength.toLocaleString() + ' days', true);

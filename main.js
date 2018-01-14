@@ -525,7 +525,7 @@ client.on('message', message => {
         }
     } else
         
-    if (command === 'badgeInfo') {
+    if (command === 'badgeinfo') {
         console.log('badgeInfo called');
         if (args.length === 1) {
             console.log('args === 1');

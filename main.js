@@ -526,13 +526,16 @@ client.on('message', message => {
     } else
         
     if (command === 'badgeInfo') {
+        console.log('badgeInfo called');
         if (args.length === 1) {
+            console.log('args === 1');
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/badges', '', function(body) {
+                console.log('data received');
                 var badgeObj = body.badgeCollections[0].badges.filter(function(x) {
                     return x.name === args[0];
                 });
                 console.log(badgeObj);
-                message.channel.send(badgeObj.safeExtendedDescription);
+                //message.channel.send(badgeObj.safeExtendedDescription);
             });
         } else
         if (args.length !== 1) {

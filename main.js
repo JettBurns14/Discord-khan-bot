@@ -533,7 +533,7 @@ client.on('message', message => {
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/badges', '', function(body) {
                 console.log('data received');
                 var badgeObj = body[0].badgeCollections[0].badges.filter(function(x) {
-                    return x.name === args[0];
+                    return x.slug === args[0];
                 });
                 console.log(badgeObj);
                 //message.channel.send(badgeObj.safeExtendedDescription);

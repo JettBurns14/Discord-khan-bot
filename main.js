@@ -529,9 +529,10 @@ client.on('message', message => {
         console.log('badgeInfo called');
         if (args.length === 1) {
             console.log('args === 1');
+            console.log(args[0]);
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/badges', '', function(body) {
                 console.log('data received');
-                var badgeObj = body.badgeCollections[0].badges.filter(function(x) {
+                var badgeObj = body[0].badgeCollections[0].badges.filter(function(x) {
                     return x.name === args[0];
                 });
                 console.log(badgeObj);

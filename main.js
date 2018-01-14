@@ -525,6 +525,23 @@ client.on('message', message => {
         }
     } else
         
+    if (command === 'badgeInfo') {
+        if (args.length === 1) {
+            getKAData(message, 'https://www.khanacademy.org/api/internal/user/badges', '', function(body) {
+                let badgeObj = body.badgeCollections[0].badges.filter(function(x) {
+                    return x.name === args[0];
+                });
+                message.channel.send(badgeObj.safeExtendedDescription);
+            }
+        } else
+        if (args.length !== 1) {
+            let embed = new Discord.RichEmbed();
+            embed.setColor('#ff0000');
+            embed.addField('Error', ':x: The correct usage is **`k.badgeInfo <badge name>`**.');
+            message.channel.sendEmbed(embed);
+        }
+    } else
+        
     if (command === 'userprograms') {
         if (args.length === 1) {
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/scratchpads?username=' + args[0] + '&limit=1000', '', function(body) {

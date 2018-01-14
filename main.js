@@ -37,6 +37,7 @@ const commands = [
         "Browse <page> : Displays the top KA program on the hotlist.",
         "ProgramData <program-id> : Returns a program\'s data.",
         "UserPrograms <username> : Returns a user's projects stats.",
+        "BadgeInfo <badge-name> : Returns info about a given badge."
     ],
 ];
 
@@ -252,7 +253,13 @@ client.on('message', message => {
         if (args[0] === 'userprograms' || args[0] === 'userPrograms') {
             let embed = new Discord.RichEmbed(); 
             embed.setColor("#ffff00");
-            embed.addField("Badges", 'Use **`k.userPrograms <username>`** to get all a user\'s program stats.');
+            embed.addField("UserPrograms", 'Use **`k.userPrograms <username>`** to get all a user\'s program stats.');
+            message.channel.sendEmbed(embed);
+        } else
+        if (args[0] === 'badgeinfo' || args[0] === 'badgeInfo') {
+            let embed = new Discord.RichEmbed(); 
+            embed.setColor("#ffff00");
+            embed.addField("BadgeInfo", 'Use **`k.badgeInfo <badge-name>`** to returns info about a given badge.');
             message.channel.sendEmbed(embed);
         }
         else if (args.length === 0) {
@@ -531,11 +538,12 @@ client.on('message', message => {
             console.log('args === 1');
             console.log(args[0]);
             getKAData(message, 'https://www.khanacademy.org/api/internal/user/badges', '', function(body) {
-                console.log('data received');
-                var badgeObj = body[0].badgeCollections[0].badges.filter(function(x) {
+                console.log(body);
+                /*
+                var badgeObj = body.badgeCollections[0].badges.filter(function(x) {
                     return x.slug === args[0];
                 });
-                console.log(badgeObj);
+                console.log(badgeObj);*/
                 //message.channel.send(badgeObj.safeExtendedDescription);
             });
         } else

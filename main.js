@@ -532,7 +532,7 @@ client.on('message', message => {
                     return x.name === args[0];
                 });
                 message.channel.send(badgeObj.safeExtendedDescription);
-            }
+            });
         } else
         if (args.length !== 1) {
             let embed = new Discord.RichEmbed();

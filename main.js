@@ -16,7 +16,7 @@ const commands = [
         "Talk : Returns random phrases.",
         "Hello : Says hello back.",
         "Ping : Returns 'pong'.",
-        "Invite : Returns invite link for KhanBot.",
+        "Info : Returns info about KhanBot.",
         "Uptime : Returns time since I last launched.",
     ],
     // Math
@@ -173,11 +173,15 @@ client.on('message', message => {
     if (command === 'uptime') {
         message.channel.sendMessage(':clock2: **KhanBot** has been online for ' + millisToTime(totalTime) + '.');
     } else
-    if (command === 'invite') {
-        let embed = new Discord.RichEmbed(); 
-        embed.setColor("#5e8fe0");
-        embed.addField("Invite me!", 'Use this link to invite me to **your** server!\nhttps://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=307851997040738304');
-        message.channel.sendEmbed(embed);
+    if (command === 'info') {
+        let embed = new Discord.RichEmbed();
+        embed.setThumbnail(client.user.avatarURL);
+        embed.addField('Users', client.users.size, true);
+        embed.addField('Servers', client.guilds.size, true);
+        embed.addField('Creator', '<@218397146049806337>', true);
+        embed.addField("Invite", 'http://bit.ly/inviteKhanbot');
+        embed.setColor('#00ffcc');
+        message.channel.send({ embed });
     } else
     
     if (command === 'add') {

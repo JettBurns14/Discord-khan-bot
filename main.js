@@ -125,7 +125,7 @@ client.on('ready', () => {
         `${client.users.size} Users`,
         `${client.channels.size} Channels`
     ];
-    client.user.setPresence({ game: { name: `${prefix}help | ${games[Math.round(Math.random()*games.length)]}`, type: 0 } });
+    client.user.setPresence({ game: { name: `${prefix}help | ${games[Math.floor(Math.random()*games.length)]}`, type: 0 } });
     client.user.setUsername('KhanBot');
     console.log('I am ready Jett!');
     console.log(`I have started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -179,7 +179,7 @@ client.on('message', message => {
         embed.addField('Users', client.users.size, true);
         embed.addField('Servers', client.guilds.size, true);
         embed.addField('Creator', '<@218397146049806337>', true);
-        embed.addField("Invite", 'http://bit.ly/inviteKhanbot');
+        embed.addField("Invite", 'http://bit.ly/inviteKhanbot', true);
         embed.setColor('#00ffcc');
         message.channel.send({ embed });
     } else

@@ -1,10 +1,10 @@
 {
-  "name": "Test",
-  "description": "Test",
+  "name": "KhanBot",
+  "description": "KhanBot",
   "version": "0.0.0",
-  "main": "kao.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node kao.js"
+    "start": "node main.js"
   },
   "dependencies": {
     "discord.js": "11.1.0",

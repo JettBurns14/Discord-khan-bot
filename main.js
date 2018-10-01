@@ -1,7 +1,23 @@
 const Discord = require('discord.js');
 const request = require('request');
 const client = new Discord.Client();
-const prefix = 'k.';
+for (const env of [
+  "PREFIX",
+  "TOKEN",
+  "PROJECT_DOMAIN",
+  "PORT"
+]) {
+  if (!process.env.hasOwnProperty(env)) {
+    console.log("Missing required environment variable, checking .env file...");
+    try {
+      require("dotenv").config();
+    } catch (e) {
+      console.log("Error checking from .env file: "+e.stack);
+      process.exit(1);
+    }
+  }
+}
+const prefix = process.env.PREFIX;
 
 // Start Glitch stuff ==========>
 const http = require('http');

@@ -4,6 +4,7 @@ const client = new Discord.Client();
 const prefix = 'k.';
 
 // Start Glitch stuff ==========>
+/*
 const http = require('http');
 const express = require('express');
 const app = express();
@@ -18,6 +19,7 @@ app.listen(process.env.PORT);
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
+*/
 // End Glitch stuff <==========
 
 
@@ -696,6 +698,6 @@ client.on('message', message => {
     }*/
 });
 
-client.login(process.env.TOKEN)
+client.login(process.env.BOT_TOKEN)
     .then(() => console.log("Valid token"))
     .catch(() => console.log("Invalid token"));
